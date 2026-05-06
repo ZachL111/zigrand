@@ -1,67 +1,40 @@
 # zigrand
 
-`zigrand` explores systems programming in Zig. The repository keeps the core rule set compact, then surrounds it with examples that show how the decisions move.
+`zigrand` keeps a focused Zig implementation around systems programming. The project goal is to implement deterministic PRNG streams and reservoir sampling checks.
 
-## Zigrand Notes
+## Problem It Tries To Make Smaller
 
-The quickest review path is the verifier first, then the fixtures, then the operations note. That order makes it easy to see whether the code, data, and explanation still agree.
+This is intentionally local and self-contained so it can be inspected without credentials, services, or seeded history.
 
-## Why This Exists
+## Zigrand Review Notes
 
-I use this kind of project to make a rule visible before adding more machinery around it. The important part here is not the size of the codebase. It is that the input signals, scoring rule, fixture data, and expected output can all be checked in one sitting.
+Start with `guard slack` and `allocation pressure`. Those cases create the widest score spread in this repo, so they are the best quick check when the model changes.
 
-## Example Scenarios
+## Working Pieces
 
-The examples are meant to be readable before they are exhaustive. They cover enough variation to show how latency and risk can pull a decision below the threshold.
+- `fixtures/domain_review.csv` adds cases for allocation pressure and dirty state.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/zigrand-walkthrough.md` walks through the case spread.
+- The Zig code includes a review path for `guard slack` and `allocation pressure`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Implementation Notes
+## Design Notes
 
-The core is a scoring model over demand, capacity, latency, risk, and weight. That keeps memory shape, resource pressure, and bounds checks in one explicit decision path. The threshold is 167, with risk penalty 5, latency penalty 3, and weight bonus 4. The Zig version uses compile-time constants and native test blocks for fast local checks.
+The implementation keeps the scoring rule plain: reward signal and confidence, preserve slack, penalize drag, then classify the result into a review lane.
 
-## Feature Notes
+The Zig code keeps the review rule close to the tests.
 
-- Models memory shape with deterministic scoring and explicit review decisions.
-- Uses fixture data to keep resource pressure changes visible in code review.
-- Includes extended examples for bounds checks, including `recovery` and `degraded`.
-- Documents low-level invariants tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-
-## Try It
+## Example Run
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
-
 ## Tests
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
+The same command runs the local verification path. The highest-scoring domain case is `edge` at 216, which lands in `ship`. The most cautious case is `stale` at 131, which lands in `watch`.
 
-The audit command checks repository structure and README constraints before it delegates to the verifier.
+## Known Limits
 
-## Code Tour
-
-- `src`: primary implementation
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
-
-## Roadmap
-
-- Add malformed input fixtures so the failure path is as visible as the happy path.
-- Split the scoring constants into a typed configuration object and validate it before use.
-- Add a comparison mode that shows how decisions change when one signal is adjusted.
-- Add one more systems programming fixture that focuses on a malformed or borderline input.
-
-## Boundaries
-
-The fixture set is deliberately small. That keeps the review surface clear, but it also means the model should not be treated as a complete domain simulator.
-
-## Local Setup
-
-Use a normal shell with Zig available on `PATH`. The verifier is written as a PowerShell script because the portfolio was assembled on Windows.
+The repository is intentionally scoped to local checks. I would expand it by adding adversarial fixtures before adding features.

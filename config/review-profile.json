@@ -1,0 +1,29 @@
+{
+  "repo": "zigrand",
+  "language": "Zig",
+  "category": "Systems programming",
+  "case_count": 5,
+  "score_formula": "signal * 2 + slack + confidence - drag * 3",
+  "lane_thresholds": {
+    "ship": 140,
+    "watch": 105
+  },
+  "read_order": [
+    "README.md",
+    "fixtures/domain_review.csv",
+    "metadata/domain-review.json",
+    "examples/zigrand-walkthrough.md"
+  ],
+  "first_question": "Does allocation pressure still dominate the review result?",
+  "second_question": "Is guard slack being penalized hard enough before layout drift is trusted?",
+  "highest_case": {
+    "name": "edge",
+    "focus": "guard slack",
+    "score": 216
+  },
+  "lowest_case": {
+    "name": "stale",
+    "focus": "allocation pressure",
+    "score": 131
+  }
+}

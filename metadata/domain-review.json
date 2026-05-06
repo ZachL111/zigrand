@@ -1,0 +1,73 @@
+{
+  "repo": "zigrand",
+  "language": "Zig",
+  "category": "Systems programming",
+  "goal": "Implement deterministic PRNG streams and reservoir sampling checks.",
+  "review_model": {
+    "terms": [
+      "allocation pressure",
+      "dirty state",
+      "guard slack",
+      "layout drift"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "allocation pressure",
+      "signal": 44,
+      "slack": 43,
+      "drag": 17,
+      "confidence": 57,
+      "score": 137,
+      "lane": "watch"
+    },
+    {
+      "name": "stress",
+      "focus": "dirty state",
+      "signal": 79,
+      "slack": 41,
+      "drag": 32,
+      "confidence": 60,
+      "score": 163,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "guard slack",
+      "signal": 71,
+      "slack": 34,
+      "drag": 11,
+      "confidence": 73,
+      "score": 216,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "layout drift",
+      "signal": 52,
+      "slack": 20,
+      "drag": 8,
+      "confidence": 52,
+      "score": 152,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "allocation pressure",
+      "signal": 72,
+      "slack": 28,
+      "drag": 29,
+      "confidence": 46,
+      "score": 131,
+      "lane": "watch"
+    }
+  ]
+}
